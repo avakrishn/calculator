@@ -1,0 +1,62 @@
+body, html{
+    background: #eee;
+}
+
+#root{
+    display: flex;
+    flex-direction: column;
+    width: 280px;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+#display{
+    height: 80px;
+    margin-bottom: 0.6px;
+    background: grey;
+    color: #eee;
+    text-align: end; 
+    font-size: 60px;
+}
+
+#keypad{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+button{
+    width: 70px;
+    height: 70px;
+    font-size: 23px;
+}
+
+.numberDiv{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 75%;
+}
+
+.positiveNumbers{
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+}
+
+#zero{
+    width: 140px;
+    padding-left: 30px;
+    text-align: left;  
+}
+
+.symbolsDiv{
+    display: flex;
+    flex-direction: column;
+}
+
+.symbol{
+    background: rgb(240, 139, 7);
+    color: #eee;
+}
+
