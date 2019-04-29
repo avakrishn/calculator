@@ -13,10 +13,11 @@ body, html{
 #display{
     height: 80px;
     margin-bottom: 0.6px;
+    padding-right: 5px;
     background: grey;
     color: #eee;
     text-align: end; 
-    font-size: 60px;
+    font-size: 50px;
 }
 
 #keypad{
