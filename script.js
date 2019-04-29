@@ -5,7 +5,10 @@ window.onload = () => {
 const initCalc = () =>{
     // 1. state
     const state = {
-        display : 0
+        total: 0,
+        display : 0,
+        number: 0,
+        operation: ''
     }
 
     const symbolsArray = ['/', 'x', '-', '+', '='];
@@ -16,15 +19,15 @@ const initCalc = () =>{
 
     // 3. create number buttons
     
-    const numberDiv = createDivWithClass('numberDiv');
-    const positiveNumbers = createDivWithClass('positiveNumbers');
+    const numberDiv = createElWithClass('div', 'numberDiv');
+    const positiveNumbers = createElWithClass('div', 'positiveNumbers');
 
     for(let i = 9; i > 0; i--){
         const number = createButton(i, 'number');
         positiveNumbers.append(number);
     }
 
-    const clear = createButton('AC', 'number');
+    const clear = createButton('C', 'number', 'clear');
     const plusMinus = createButton('+/-', 'number');
     const mod = createButton('%', 'number');
     const zero = createButton(0, 'number');
@@ -36,28 +39,28 @@ const initCalc = () =>{
 
     // 4. Create symbol buttons;
 
-    const symbolsDiv = createDivWithClass('symbolsDiv');
+    const symbolsDiv = createElWithClass('div','symbolsDiv');
     symbolsArray.forEach(s => {
         const symbol = createButton(s, 'symbol');
         symbolsDiv.append(symbol);
     });
 
     keypad.append(numberDiv, symbolsDiv);
-    display.innerHTML = state.display;
+    syncDisplay();
 
+    function syncDisplay(){
+        display.innerHTML = state.display;
+    }
 
-
-
-    function createDivWithClass(classname){
-        const element = document.createElement('div');
+    function createElWithClass(tagname, classname){
+        const element = document.createElement(tagname);
         element.classList.add(classname);
         return element;
     }
 
 
     function createButton (id, className){
-        const btn = document.createElement('button');
-        btn.classList.add(className);
+        const btn = createElWithClass('button', className);
         btn.innerHTML = id;
         return btn;
     }
