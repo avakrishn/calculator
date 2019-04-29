@@ -45,7 +45,7 @@ button{
     flex-wrap: wrap;
 }
 
-#zero{
+[data-key="0"]{
     width: 140px;
     padding-left: 30px;
     text-align: left;  
