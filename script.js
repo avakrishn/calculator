@@ -6,12 +6,13 @@ const initCalc = () =>{
     // 1. state
     const state = {
         total: 0,
-        display : 0,
+        // display : 0,
         number: 0,
         operation: ''
     }
 
     const symbolsArray = ['/', 'x', '-', '+', '='];
+    const symbolsSet = new Set();
     
     // 2. references to DOM elements 
     const display = document.getElementById('display');
@@ -23,15 +24,15 @@ const initCalc = () =>{
     const positiveNumbers = createElWithClass('div', 'positiveNumbers');
 
     for(let i = 9; i > 0; i--){
-        const number = createButton(i, 'number', i);
+        const number = createButton(i, 'number');
         positiveNumbers.append(number);
     }
 
-    const clear = createButton('C', 'number', 'clear');
-    const plusMinus = createButton('+/-', 'number', 'plusMinus');
-    const mod = createButton('%', 'number', 'mod');
-    const zero = createButton(0, 'number', 0);
-    const dot = createButton('.', 'number', 'dot');
+    const clear = createButton('C', 'number');
+    const plusMinus = createButton('+/-', 'number');
+    const mod = createButton('%', 'number');
+    const zero = createButton(0, 'number');
+    const dot = createButton('.', 'number');
 
 
     numberDiv.append(clear, plusMinus, mod, positiveNumbers, zero, dot);
@@ -40,16 +41,14 @@ const initCalc = () =>{
 
     const symbolsDiv = createElWithClass('div','symbolsDiv');
     symbolsArray.forEach(s => {
+        symbolsSet.add(s);
         const symbol = createButton(s, 'symbol');
         symbolsDiv.append(symbol);
     });
 
     keypad.append(numberDiv, symbolsDiv);
-    syncDisplay();
+    syncDisplay('number');
 
-    function syncDisplay(){
-        display.innerHTML = state.display;
-    }
 
     function createElWithClass(tagname, classname){
         const element = document.createElement(tagname);
@@ -58,9 +57,9 @@ const initCalc = () =>{
     }
 
 
-    function createButton (text, className, dataKey){
+    function createButton (text, className){
         const btn = createElWithClass('button', className);
-        btn.setAttribute('data-key', dataKey);
+        btn.setAttribute('data-key', text);
         btn.innerHTML = text;
         btn.addEventListener('click', btnClicked);
         return btn;
@@ -68,21 +67,59 @@ const initCalc = () =>{
 
     function btnClicked(){
         const btnData = this.getAttribute('data-key');
-       if(!isNaN(parseInt(btnData))){
-            updateState('display', btnData);
-       }else{
-        updateState('total', 0);
-        updateState('display', 0);
-        updateState('number', 0);
-        updateState('operation', '');
-       } 
+        if(!isNaN(parseFloat(btnData))){
+           if(state.operation === ''){
+            updateState(parseFloat(state.number + btnData),'', 'number');
+
+           }else{
+            updateState(parseFloat(btnData), '', 'number');
+
+           } 
+        }else if(symbolsSet.has(btnData) || btnData === '%'){
+            updateState(state.number, btnData, 'total');
+        }else if(btnData === "+/-"){
+            updateState(state.number * -1, state.operation, 'number');
+        }else{
+            updateState(0, '', 'number');
+
+        } 
     }
     
-    function updateState(key, value){
-        state[key] = value;
-        if(key === 'display'){
-            syncDisplay();
+    function updateState(number, operation, display){
+        state.number = number;
+
+        if(state.operation !== ""){
+            doMath(state.operation);
+        }
+
+        state.operation = operation;
+
+        syncDisplay(display);
+     
+        console.log(state);
+    }
+
+    function doMath(operation){
+        switch (operation){
+            case '/':
+                
+            case 'x':
+            case '-':
+            case '+':
+            case '=':
+            case '%':
+            
         }
     }
 
+    function syncDisplay(key){
+        display.innerHTML = state[key];
+    }
+
 }
+
+// const state = {
+//     total: 0,
+//     number: 0,
+//     operation: ''
+// }
