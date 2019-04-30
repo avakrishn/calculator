@@ -8,7 +8,8 @@ const initCalc = () =>{
         total: 0,
         // display : 0,
         number: 0,
-        operation: ''
+        operation: '',
+        initial: true,
     }
 
     const symbolsArray = ['/', 'x', '-', '+', '='];
@@ -67,7 +68,7 @@ const initCalc = () =>{
 
     function btnClicked(){
         const btnData = this.getAttribute('data-key');
-        if(!isNaN(parseFloat(btnData))){
+        if(!isNaN(parseFloat(btnData))){ // number
            if(state.operation === ''){
             updateState(parseFloat(state.number + btnData),'', 'number');
 
@@ -75,23 +76,39 @@ const initCalc = () =>{
             updateState(parseFloat(btnData), '', 'number');
 
            } 
+        }else if(btnData === '='){
+            updateState(parseFloat(state.number), btnData, 'total');
         }else if(symbolsSet.has(btnData) || btnData === '%'){
-            updateState(state.number, btnData, 'total');
+            updateState(parseFloat(state.number), btnData, 'total');
         }else if(btnData === "+/-"){
-            updateState(state.number * -1, state.operation, 'number');
+            updateState(parseFloat(state.number * -1), state.operation, 'number');
         }else{
-            updateState(0, '', 'number');
+            updateState(0, '', 'number', 0);
 
         } 
     }
     
-    function updateState(number, operation, display){
-        state.number = number;
+    function updateState(number, operation, display, total){
 
         if(state.operation !== ""){
-            doMath(state.operation);
+            if(state.initial === true){
+                state.initial = false;
+            }
+            if(state.operation !== "="){
+                doMath(state.operation, number);
+            }
         }
 
+        if(state.initial === true){
+            state.total = number;
+        }
+
+        if(total === 0){
+            state.total = total;
+            state.initial = true;
+        }
+        
+        state.number = number;
         state.operation = operation;
 
         syncDisplay(display);
@@ -99,15 +116,31 @@ const initCalc = () =>{
         console.log(state);
     }
 
-    function doMath(operation){
+    function doMath(operation, number){
+        let result;
         switch (operation){
             case '/':
-                
+                result = state.total / number;
+                state.total = result;
+                break;
             case 'x':
+                result = state.total * number;
+                state.total = result;
+                break;
             case '-':
+                result = state.total-number;
+                state.total = result;
+                break;
             case '+':
-            case '=':
+                result = state.total + number;
+                state.total = result;
+                break;
             case '%':
+                result = state.total %  number;
+                state.total = result;
+                break;
+            default:
+                return;
             
         }
     }
@@ -117,9 +150,3 @@ const initCalc = () =>{
     }
 
 }
-
-// const state = {
-//     total: 0,
-//     number: 0,
-//     operation: ''
-// }
