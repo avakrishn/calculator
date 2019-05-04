@@ -10,6 +10,8 @@ const initCalc = () =>{
         number: 0,
         operation: '',
         initial: true,
+        pemdas: '',
+        pemdasNumber: null,
     }
 
     const symbolsArray = ['/', 'x', '-', '+', '='];
@@ -97,7 +99,7 @@ const initCalc = () =>{
             }
             state.operation = operation;
             syncDisplay(display);
-            console.log(state);
+            // console.log(state);
             return;
         }
 
@@ -106,66 +108,68 @@ const initCalc = () =>{
             state.initial = true;
             state.number = number;
             state.operation = operation;
+            state.pemdas = "";
+            state.pemdasNumber = null;
             syncDisplay(display);
-            console.log(state);
+            // console.log(state);
             return;
             
         }
 
-        // if(state.initial === true){
-        //     state.number = parseFloat(state.number +""+ number);
-        //     state.total = state.number;
-        //     state.operation = operation;
-        //     syncDisplay(display);
-        //     console.log(state);
-        //     return;
-        // }
-
-        if(state.operation !== "="){
+        if(operation !== "="){
             if(state.initial === true){
                 state.initial = false;
             }
-            doMath(state.operation, number);
+            let pemdas_state = (state.operation === "+" || state.operation === "-");
+            let pemdas = (operation === "x" || operation === "/" || operation === "%");
+            if(pemdas_state && pemdas){
+                state.pemdas = state.operation;
+                state.pemdasNumber = state.total;
+                state.total = number;
+                state.number = 0;
+                state.operation = operation;
+                syncDisplay("total");
+                return;
+                // doMath(state.operation, number);
+            }else{
+                doMath(state.operation, number);
+            }
+            
             if(operation == ""){
                 state.number = number;
+
             }else{
                 state.number = 0;
             }
             
             state.operation = operation;
             syncDisplay(display);
-            console.log(state);
+            // console.log(state);
             return;
         }
-       
-        
 
-        // if(operation !== state.operation){
-        //     if(state.initial === true){
-        //         state.initial = false;
-        //     }
-            // if(state.operation !== "="){
-            //     doMath(state.operation, number);
-            //     state.number = number;
-            //     state.operation = operation;
-            //     syncDisplay(display);
-            //     console.log(state);
-            //     return;
-            // }
-        // }
+        if(operation === "=" && state.pemdasNumber !== null){
+            doMath(state.operation, number);
+            console.log(state.total);
+            let temp = state.total;
+            state.total = state.pemdasNumber;
+            state.pemdasNumber = temp;
+            doMath(state.pemdas, state.pemdasNumber);
+            console.log(state.total);
+            state.number =  0;
+            state.pemdas = "";
+            state.pemdasNumber = null;
+            syncDisplay("total");
+            return;
+        }
+        if(operation === '='){
+            doMath(state.operation, number);
+            syncDisplay("total");
+            return;
+        }
 
-
-       
-        
-        // state.number = number ;
-        // state.number = parseFloat(state.number +""+ number);
-        // state.operation = operation;
-
-
-
-        // syncDisplay(display);
      
-        console.log(state);
+        // console.log(state);
     }
 
 
@@ -181,7 +185,7 @@ const initCalc = () =>{
                 state.total = result;
                 break;
             case '-':
-                result = state.total-number;
+                result = state.total - number;
                 state.total = result;
                 break;
             case '+':
@@ -200,6 +204,7 @@ const initCalc = () =>{
 
     function syncDisplay(key){
         display.innerHTML = state[key];
+        console.log(state);
     }
 
 }
