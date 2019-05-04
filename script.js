@@ -103,6 +103,17 @@ const initCalc = () =>{
             return;
         }
 
+        if(btnPress === "plusMinus"){
+            state.number = number;
+            if(state.initial == true){
+                state.total = state.number;
+            }
+            state.operation = operation;
+            syncDisplay(display);
+            // console.log(state);
+            return;
+        }
+
         if(btnPress === 'clear'){
             state.total = total;
             state.initial = true;
