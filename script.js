@@ -69,52 +69,105 @@ const initCalc = () =>{
     function btnClicked(){
         const btnData = this.getAttribute('data-key');
         if(!isNaN(parseFloat(btnData))){ // number
-           if(state.operation === ''){
-            updateState(parseFloat(state.number + btnData),'', 'number');
+        //    if(state.operation === ''){
+            // updateState(parseFloat(state.number + btnData), state.operation, 'number');
 
-           }else{
-            updateState(parseFloat(btnData), '', 'number');
+        //    }else{
+            updateState("number", parseFloat(btnData), state.operation, 'number');
 
-           } 
+        //    } 
         }else if(btnData === '='){
-            updateState(parseFloat(state.number), btnData, 'total');
+            updateState("symbol", parseFloat(state.number), btnData, 'total');
         }else if(symbolsSet.has(btnData) || btnData === '%'){
-            updateState(parseFloat(state.number), btnData, 'total');
+            updateState("symbol", parseFloat(state.number), btnData, 'total');
         }else if(btnData === "+/-"){
-            updateState(parseFloat(state.number * -1), state.operation, 'number');
+            updateState("plusMinus", parseFloat(state.number * -1), state.operation, 'number');
         }else{
-            updateState(0, '', 'number', 0);
+            updateState("clear", 0, '', 'number', 0);
 
         } 
     }
     
-    function updateState(number, operation, display, total){
+    function updateState(btnPress, number, operation, display, total){
 
-        if(state.operation !== ""){
+        if(btnPress === "number"){
+            state.number = parseFloat(state.number +""+ number);
+            if(state.initial == true){
+                state.total = state.number;
+            }
+            state.operation = operation;
+            syncDisplay(display);
+            console.log(state);
+            return;
+        }
+
+        if(btnPress === 'clear'){
+            state.total = total;
+            state.initial = true;
+            state.number = number;
+            state.operation = operation;
+            syncDisplay(display);
+            console.log(state);
+            return;
+            
+        }
+
+        // if(state.initial === true){
+        //     state.number = parseFloat(state.number +""+ number);
+        //     state.total = state.number;
+        //     state.operation = operation;
+        //     syncDisplay(display);
+        //     console.log(state);
+        //     return;
+        // }
+
+        if(state.operation !== "="){
             if(state.initial === true){
                 state.initial = false;
             }
-            if(state.operation !== "="){
-                doMath(state.operation, number);
+            doMath(state.operation, number);
+            if(operation == ""){
+                state.number = number;
+            }else{
+                state.number = 0;
             }
+            
+            state.operation = operation;
+            syncDisplay(display);
+            console.log(state);
+            return;
         }
-
-        if(state.initial === true){
-            state.total = number;
-        }
-
-        if(total === 0){
-            state.total = total;
-            state.initial = true;
-        }
+       
         
-        state.number = number;
-        state.operation = operation;
 
-        syncDisplay(display);
+        // if(operation !== state.operation){
+        //     if(state.initial === true){
+        //         state.initial = false;
+        //     }
+            // if(state.operation !== "="){
+            //     doMath(state.operation, number);
+            //     state.number = number;
+            //     state.operation = operation;
+            //     syncDisplay(display);
+            //     console.log(state);
+            //     return;
+            // }
+        // }
+
+
+       
+        
+        // state.number = number ;
+        // state.number = parseFloat(state.number +""+ number);
+        // state.operation = operation;
+
+
+
+        // syncDisplay(display);
      
         console.log(state);
     }
+
 
     function doMath(operation, number){
         let result;
