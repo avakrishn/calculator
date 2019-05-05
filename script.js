@@ -12,6 +12,7 @@ const initCalc = () =>{
         initial: true,
         pemdas: '',
         pemdasNumber: null,
+        isDecimal: false
     }
 
     const symbolsArray = ['/', 'x', '-', '+', '='];
@@ -84,6 +85,8 @@ const initCalc = () =>{
             updateState("symbol", parseFloat(state.number), btnData, 'total');
         }else if(btnData === "+/-"){
             updateState("plusMinus", parseFloat(state.number * -1), state.operation, 'number');
+        }else if(btnData === "."){
+            updateState('dot', parseFloat(state.number), btnData);
         }else{
             updateState("clear", 0, '', 'number', 0);
 
@@ -91,9 +94,20 @@ const initCalc = () =>{
     }
     
     function updateState(btnPress, number, operation, display, total){
+        if(btnPress === "dot"){
+            state.isDecimal = true;
+            document.getElementById('display').innerHTML = state.number +".";
+            return;
+        }
 
         if(btnPress === "number"){
-            state.number = parseFloat(state.number +""+ number);
+            if(state.isDecimal === true){
+                state.number = parseFloat(state.number +"."+ number);
+                state.isDecimal = false;
+            }else{
+                state.number = parseFloat(state.number +""+ number);
+            }
+            
             if(state.initial == true){
                 state.total = state.number;
             }
