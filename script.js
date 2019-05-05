@@ -9,9 +9,9 @@ const initCalc = () =>{
         // display : 0,
         number: 0,
         operation: '',
-        initial: true,
-        pemdas: '',
-        pemdasNumber: null,
+        appendNumber: true,
+        // pemdas: '',
+        // pemdasNumber: null,
         isDecimal: false
     }
 
@@ -81,7 +81,9 @@ const initCalc = () =>{
         //    } 
         }else if(btnData === '='){
             updateState("symbol", parseFloat(state.number), btnData, 'total');
-        }else if(symbolsSet.has(btnData) || btnData === '%'){
+        }else if(btnData === '%'){
+            updateState("percent", parseFloat(state.number), btnData, 'total');
+        }else if(symbolsSet.has(btnData)){
             updateState("symbol", parseFloat(state.number), btnData, 'total');
         }else if(btnData === "+/-"){
             updateState("plusMinus", parseFloat(state.number * -1), state.operation, 'number');
@@ -100,6 +102,22 @@ const initCalc = () =>{
             return;
         }
 
+        if(btnPress === "percent"){
+            // if(state.total !== state.number){
+            //     state.number = (state.number /100) * state.total;
+            // }else{
+            //     state.number = (state.number /100)
+            //     state.total = state.number;
+            //     state.number = 0;
+            //     syncDisplay(display);
+            //     return; 
+            // }
+            state.total = state.total / 100;
+            state.number = 0;
+            syncDisplay(display);
+            return;
+        }
+
         if(btnPress === "number"){
             if(state.isDecimal === true){
                 state.number = parseFloat(state.number +"."+ number);
@@ -108,7 +126,7 @@ const initCalc = () =>{
                 state.number = parseFloat(state.number +""+ number);
             }
             
-            if(state.initial == true){
+            if(state.appendNumber == true){
                 state.total = state.number;
             }
             state.operation = operation;
@@ -119,7 +137,7 @@ const initCalc = () =>{
 
         if(btnPress === "plusMinus"){
             state.number = number;
-            if(state.initial == true){
+            if(state.appendNumber == true){
                 state.total = state.number;
             }
             state.operation = operation;
@@ -130,11 +148,11 @@ const initCalc = () =>{
 
         if(btnPress === 'clear'){
             state.total = total;
-            state.initial = true;
+            state.appendNumber = true;
             state.number = number;
             state.operation = operation;
-            state.pemdas = "";
-            state.pemdasNumber = null;
+            // state.pemdas = "";
+            // state.pemdasNumber = null;
             syncDisplay(display);
             // console.log(state);
             return;
@@ -142,23 +160,23 @@ const initCalc = () =>{
         }
 
         if(operation !== "="){
-            if(state.initial === true){
-                state.initial = false;
+            if(state.appendNumber === true){
+                state.appendNumber = false;
             }
-            let pemdas_state = (state.operation === "+" || state.operation === "-");
-            let pemdas = (operation === "x" || operation === "/" || operation === "%");
-            if(pemdas_state && pemdas){
-                state.pemdas = state.operation;
-                state.pemdasNumber = state.total;
-                state.total = number;
-                state.number = 0;
-                state.operation = operation;
-                syncDisplay("total");
-                return;
-                // doMath(state.operation, number);
-            }else{
+            // let pemdas_state = (state.operation === "+" || state.operation === "-");
+            // let pemdas = (operation === "x" || operation === "/" || operation === "%");
+            // if(pemdas_state && pemdas){
+            //     state.pemdas = state.operation;
+            //     state.pemdasNumber = state.total;
+            //     state.total = number;
+            //     state.number = 0;
+            //     state.operation = operation;
+            //     syncDisplay("total");
+            //     return;
+            //     // doMath(state.operation, number);
+            // }else{
                 doMath(state.operation, number);
-            }
+            // }
             
             if(operation == ""){
                 state.number = number;
@@ -173,23 +191,26 @@ const initCalc = () =>{
             return;
         }
 
-        if(operation === "=" && state.pemdasNumber !== null){
-            doMath(state.operation, number);
-            console.log(state.total);
-            let temp = state.total;
-            state.total = state.pemdasNumber;
-            state.pemdasNumber = temp;
-            doMath(state.pemdas, state.pemdasNumber);
-            console.log(state.total);
-            state.number =  0;
-            state.pemdas = "";
-            state.pemdasNumber = null;
-            syncDisplay("total");
-            return;
-        }
+        // if(operation === "=" && state.pemdasNumber !== null){
+        //     doMath(state.operation, number);
+        //     console.log(state.total);
+        //     let temp = state.total;
+        //     state.total = state.pemdasNumber;
+        //     state.pemdasNumber = temp;
+        //     doMath(state.pemdas, state.pemdasNumber);
+        //     console.log(state.total);
+        //     state.number =  0;
+        //     state.pemdas = "";
+        //     state.pemdasNumber = null;
+        //     syncDisplay("total");
+        //     return;
+        // }
         if(operation === '='){
             doMath(state.operation, number);
-            syncDisplay("total");
+            state.number = 0;
+            state.operation = "";
+            state.appendNumber = true;
+            syncDisplay(display);
             return;
         }
 
@@ -217,10 +238,10 @@ const initCalc = () =>{
                 result = state.total + number;
                 state.total = result;
                 break;
-            case '%':
-                result = state.total %  number;
-                state.total = result;
-                break;
+            // case '%':
+            //     result = state.total %  number;
+            //     state.total = result;
+            //     break;
             default:
                 return;
             
