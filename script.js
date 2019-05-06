@@ -56,20 +56,14 @@ const initCalc = () =>{
     syncDisplay('number');
     document.onkeydown = function (event){ 
         btnClicked(event); 
-        let key = event.key;
-        if(key === "Enter"){
-            key = "=";
-        }else if(key === 'c'){
-            key = 'C';
-        }
-        const calcBtn = document.querySelector(`[data-key="${key}"]`);
-        if(calcBtn){
-            calcBtn.classList.add('active');
-        }
-        
+        activeClass(event, 'add');        
     }
 
     document.onkeyup = function (event){
+        activeClass(event, 'remove');
+    }
+
+    function activeClass(event, classListMethod){
         let key = event.key;
         if(key === "Enter"){
             key = "=";
@@ -77,11 +71,12 @@ const initCalc = () =>{
             key = 'C';
         }
         const calcBtn = document.querySelector(`[data-key="${key}"]`);
-        if(calcBtn){
+        if(calcBtn && classListMethod === 'add'){
+            calcBtn.classList.add('active');
+        }else if(calcBtn && classListMethod === 'remove'){
             calcBtn.classList.remove('active');
         }
     }
-
 
     function createElWithClass(tagname, classname){
         const element = document.createElement(tagname);
@@ -99,6 +94,7 @@ const initCalc = () =>{
     }
 
     function btnClicked(event){
+        console.log(event.key);
         const btnData = (event.key) ? event.key : this.getAttribute('data-key');
     
         if(!isNaN(parseFloat(btnData))){ // number
