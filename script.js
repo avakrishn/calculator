@@ -54,7 +54,34 @@ const initCalc = () =>{
 
     keypad.append(numberDiv, symbolsDiv);
     syncDisplay('number');
-    document.onkeypress = function (event){ btnClicked(event); }
+    document.onkeydown = function (event){ 
+        btnClicked(event); 
+        let key = event.key;
+        if(key === "Enter"){
+            key = "=";
+        }else if(key === 'c'){
+            key = 'C';
+        }
+        const calcBtn = document.querySelector(`[data-key="${key}"]`);
+        if(calcBtn){
+            calcBtn.classList.add('active');
+        }
+        
+    }
+
+    document.onkeyup = function (event){
+        let key = event.key;
+        if(key === "Enter"){
+            key = "=";
+        }else if(key === 'c'){
+            key = 'C';
+        }
+        const calcBtn = document.querySelector(`[data-key="${key}"]`);
+        if(calcBtn){
+            calcBtn.classList.remove('active');
+        }
+    }
+
 
     function createElWithClass(tagname, classname){
         const element = document.createElement(tagname);
