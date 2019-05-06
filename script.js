@@ -12,7 +12,9 @@ const initCalc = () =>{
         appendNumber: true,
         // pemdas: '',
         // pemdasNumber: null,
-        isDecimal: false
+        addDecimal: false,
+        isDecimal: false,
+        
     }
 
     const symbolsArray = ['/', 'x', '-', '+', '='];
@@ -97,8 +99,12 @@ const initCalc = () =>{
     
     function updateState(btnPress, number, operation, display, total){
         if(btnPress === "dot"){
-            state.isDecimal = true;
-            document.getElementById('display').innerHTML = state.number +".";
+            if(!state.isDecimal){
+                state.addDecimal = true;
+                state.isDecimal = true;
+                document.getElementById('display').innerHTML = state.number +".";
+                return;
+            }
             return;
         }
 
@@ -119,9 +125,9 @@ const initCalc = () =>{
         }
 
         if(btnPress === "number"){
-            if(state.isDecimal === true){
+            if(state.addDecimal === true){
                 state.number = parseFloat(state.number +"."+ number);
-                state.isDecimal = false;
+                state.addDecimal = false;
             }else{
                 state.number = parseFloat(state.number +""+ number);
             }
@@ -151,6 +157,8 @@ const initCalc = () =>{
             state.appendNumber = true;
             state.number = number;
             state.operation = operation;
+            state.addDecimal = false;
+            state.isDecimal = false;
             // state.pemdas = "";
             // state.pemdasNumber = null;
             syncDisplay(display);
@@ -210,6 +218,8 @@ const initCalc = () =>{
             state.number = 0;
             state.operation = "";
             state.appendNumber = true;
+            state.isDecimal = false;
+            state.addDecimal = false;
             syncDisplay(display);
             return;
         }
