@@ -62,3 +62,6 @@ button{
     color: #eee;
 }
 
+.active{
+    background: rgba(128, 128, 128, 0.486);
+}
