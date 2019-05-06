@@ -54,7 +54,7 @@ const initCalc = () =>{
 
     keypad.append(numberDiv, symbolsDiv);
     syncDisplay('number');
-
+    document.onkeypress = function (event){ btnClicked(event); }
 
     function createElWithClass(tagname, classname){
         const element = document.createElement(tagname);
@@ -71,8 +71,9 @@ const initCalc = () =>{
         return btn;
     }
 
-    function btnClicked(){
-        const btnData = this.getAttribute('data-key');
+    function btnClicked(event){
+        const btnData = (event.key) ? event.key : this.getAttribute('data-key');
+    
         if(!isNaN(parseFloat(btnData))){ // number
         //    if(state.operation === ''){
             // updateState(parseFloat(state.number + btnData), state.operation, 'number');
@@ -81,7 +82,7 @@ const initCalc = () =>{
             updateState("number", parseFloat(btnData), state.operation, 'number');
 
         //    } 
-        }else if(btnData === '='){
+        }else if(btnData === '=' || btnData ==="Enter"){
             updateState("symbol", parseFloat(state.number), btnData, 'total');
         }else if(btnData === '%'){
             updateState("percent", parseFloat(state.number), btnData, 'total');
@@ -91,7 +92,7 @@ const initCalc = () =>{
             updateState("plusMinus", parseFloat(state.number * -1), state.operation, 'number');
         }else if(btnData === "."){
             updateState('dot', parseFloat(state.number), btnData);
-        }else{
+        }else if(btnData === "C" || btnData === 'c'){
             updateState("clear", 0, '', 'number', 0);
 
         } 
@@ -167,7 +168,7 @@ const initCalc = () =>{
             
         }
 
-        if(operation !== "="){
+        if(operation !== "=" && operation !== "Enter"){
             if(state.appendNumber === true){
                 state.appendNumber = false;
             }
@@ -186,7 +187,7 @@ const initCalc = () =>{
                 doMath(state.operation, number);
             // }
             
-            if(operation == ""){
+            if(operation == "" ){
                 state.number = number;
 
             }else{
@@ -199,7 +200,7 @@ const initCalc = () =>{
             return;
         }
 
-        // if(operation === "=" && state.pemdasNumber !== null){
+        // if((operation === "=" || operation === "Enter" )&& state.pemdasNumber !== null){
         //     doMath(state.operation, number);
         //     console.log(state.total);
         //     let temp = state.total;
@@ -213,7 +214,7 @@ const initCalc = () =>{
         //     syncDisplay("total");
         //     return;
         // }
-        if(operation === '='){
+        if(operation === "=" || operation ==="Enter"){
             doMath(state.operation, number);
             state.number = 0;
             state.operation = "";
