@@ -94,7 +94,7 @@ const initCalc = () =>{
     }
 
     function btnClicked(event){
-        console.log(event.key);
+        // console.log(event.key);
         const btnData = (event.key) ? event.key : this.getAttribute('data-key');
     
         if(!isNaN(parseFloat(btnData))){ // number
@@ -284,7 +284,7 @@ const initCalc = () =>{
 
     function syncDisplay(key){
         display.innerHTML = state[key];
-        console.log(state);
+        // console.log(state);
     }
 
 }
